@@ -85,15 +85,8 @@ def move_file(file: Path, category: str, root_dir: Path) -> None:
     if not target_dir.exists():
         target_dir.mkdir()
     new_path = target_dir.joinpath(normalize(file.stem) + file.suffix)
-    if not new_path.exists():
-        file.replace(new_path)
-    if file.is_file() and file.suffix in [
-        ".zip",
-        ".gz",
-        ".tar",
-    ]:
-        shutil.unpack_archive(file, target_dir)
-
+    # if not new_path.exists():
+    file.replace(new_path)
 
 def sort_folder(path: Path) -> None:
     for element in path.glob("**/*"):
@@ -110,15 +103,16 @@ def sort_folder(path: Path) -> None:
                     continue
 
 
-# def unpack_file(file: Path, category: str, root_dir: Path):
-#     target_dir = root_dir.joinpath(category)
-#     if file.is_file() and file.suffix in [
-#         ".zip",
-#         ".gz",
-#         ".tar",
-#     ]:
-#         shutil.unpack_archive(file, category)
-#     return shutil.unpack_file(file, category)
+def unpack_file(root_dir: Path):
+    # target_dir = root_dir.joinpath(category)
+    # if file.is_file() and file.suffix in [
+    #     ".zip",
+    #     ".gz",
+    #     ".tar",
+    # ]:
+    for i in root_dir.glob("*"):
+        shutil.unpack_archive(i, root_dir.joinpath(i.stem))
+    # return shutil.unpack_file(file, category)
 
 
 def append_list(path: Path, category):
@@ -152,6 +146,7 @@ def main():
         return "Folder does not exists"
 
     sort_folder(path)
+    unpack_file(path.joinpath("ARHiVE"))
     return "All ok"
 
 
