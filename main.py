@@ -134,7 +134,6 @@ def main():
         return "Folder does not exists"
 
     sort_folder(path)
-
     del_folder(path)
     return "All ok"
 
