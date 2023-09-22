@@ -81,16 +81,16 @@ def move_file(file: Path, category: str, root_dir: Path) -> None:
     if not target_dir.exists():
         target_dir.mkdir()
     new_path = target_dir.joinpath(normalize(file.stem) + file.suffix)
-    if not new_path.exists():
-        file.replace(new_path)
+    # if not new_path.exists():
+    file = file.replace(new_path)
     if file.is_file() and file.suffix in [".zip", ".gz", ".tar"]:
         if file.is_file() and file.suffix in [
             ".zip",
             ".gz",
             ".tar",
         ]:
-            shutil.unpack_archive(file, target_dir)
-        return shutil.unpack_archive(file, target_dir)
+            shutil.unpack_archive(file, target_dir.joinpath(file.stem))
+        # return shutil.unpack_archive(file, target_dir)
 
 
 def sort_folder(path: Path) -> None:
@@ -108,21 +108,20 @@ def sort_folder(path: Path) -> None:
 
 
 def del_folder(path: Path) -> None:
-    for element in path.glob("**/*"):
+    for element in list(path.glob("**/*"))[::-1]:
         if element.is_dir():
-            if element.stat().st_size == 0:
-                try:
-                    os.rmdir(element)
-                except OSError:
-                    continue
-    return del_folder(path)
+            try:
+                os.rmdir(element)
+            except OSError:
+                continue
+    # return del_folder(path)
 
 
-def append_list(path: Path, category):
-    for element in path.glob("**/*"):
-        if element.is_file():
-            print(element.name, category)
-        return element.name, category
+def append_list(file: Path, category: str, root_dir: Path):
+    for file in path.glob("**/*"):
+        if file.is_file():
+            print(file.name)
+    # return element.name, category
 
 
 def main():
@@ -134,6 +133,7 @@ def main():
         return "Folder does not exists"
 
     sort_folder(path)
+
     del_folder(path)
     return "All ok"
 
